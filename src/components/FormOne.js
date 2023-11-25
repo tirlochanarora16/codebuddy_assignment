@@ -1,7 +1,7 @@
 import React from "react";
 import CustomInput from "./CustomInput";
 
-const FormOne = ({ formData, onChange }) => {
+const FormOne = ({ formData, onChange, formValidationError }) => {
   return (
     <div className="outline outline-1 outline-white text-black flex flex-col gap-6">
       <CustomInput
@@ -12,6 +12,7 @@ const FormOne = ({ formData, onChange }) => {
         type={"email"}
         onChange={onChange}
         otherInputProps={{ value: formData.email }}
+        error={formValidationError.email}
       />
       <CustomInput
         id={"password"}
@@ -21,6 +22,7 @@ const FormOne = ({ formData, onChange }) => {
         type={"password"}
         otherInputProps={{ minLength: 8, value: formData.password }}
         onChange={onChange}
+        error={formValidationError.password}
       />
     </div>
   );

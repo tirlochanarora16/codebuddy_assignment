@@ -64,7 +64,11 @@ export default function Home() {
 
   if (formStep === 0) {
     componentToRender = (
-      <FormOne formData={formData} onChange={formOneOnChange} />
+      <FormOne
+        formData={formData}
+        onChange={formOneOnChange}
+        formValidationError={formValidationError}
+      />
     );
   } else if (formStep === 1) {
     componentToRender = (

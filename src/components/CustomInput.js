@@ -8,6 +8,7 @@ const CustomInput = ({
   required,
   otherInputProps,
   onChange,
+  error,
 }) => {
   return (
     <div>
@@ -23,6 +24,7 @@ const CustomInput = ({
         onChange={onChange}
         {...otherInputProps}
       />
+      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
     </div>
   );
 };
