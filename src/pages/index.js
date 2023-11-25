@@ -12,6 +12,9 @@ export default function Home() {
     firstName: "",
     lastName: "",
     address: "",
+    country: "+91",
+    phone: "",
+    termsAndCondition: true,
   });
   const [formValidationError, setFormValidationError] = useState({});
 
@@ -20,10 +23,14 @@ export default function Home() {
   const formOnChange = (e) => {
     const { id, value } = e.target;
 
-    setFormData((prev) => ({ ...prev, [id]: value }));
+    if (id === "termsAndCondition") {
+      setFormData((prev) => ({ ...prev, [id]: e.target.checked }));
+    } else {
+      setFormData((prev) => ({ ...prev, [id]: value }));
+    }
   };
 
-  const saveFormData = () => {
+  const saveFormData = async () => {
     if (formStep === 0) {
       const { email, password } = formData;
       // checking valid email
@@ -68,7 +75,7 @@ export default function Home() {
         setFormValidationError((prev) => ({
           ...prev,
           firstName:
-            "Please enter valid first name. nly alphabets. Minimum of 2 character and maximum 50.",
+            "Please enter valid first name. Only alphabets. Minimum of 2 character and maximum 50.",
         }));
       } else {
         setFormValidationError((prev) => ({ ...prev, firstName: "" }));
@@ -104,6 +111,51 @@ export default function Home() {
         setFormStep((prev) => (prev += 1));
       }
     } else {
+      // validate phone number
+      const validPhoneNumber = /^[0-9]{10}$/.test(formData.phone);
+
+      if (!validPhoneNumber) {
+        setFormValidationError((prev) => ({
+          ...prev,
+          phone: "Please enter a valid phone number with 10 digits.",
+        }));
+      } else {
+        setFormValidationError((prev) => ({
+          ...prev,
+          phone: "",
+        }));
+      }
+
+      // validate terms and condition
+      if (!formData.termsAndCondition) {
+        setFormValidationError((prev) => ({
+          ...prev,
+          termsAndCondition: true,
+        }));
+      } else {
+        setFormValidationError((prev) => ({
+          ...prev,
+          termsAndCondition: false,
+        }));
+      }
+
+      if (formData.termsAndCondition && validPhoneNumber) {
+        localStorage.setItem("formData", JSON.stringify(formData));
+
+        const res = await fetch("https://codebuddy.review/submit", {
+          method: "POST",
+          body: JSON.stringify({
+            ...formData,
+            emailId: formData.email,
+            countryCode: formData.country,
+            phoneNumber: formData.phone,
+          }),
+        });
+
+        const data = await res.json();
+
+        console.log("success", data);
+      }
     }
   };
 
@@ -127,7 +179,11 @@ export default function Home() {
     );
   } else {
     componentToRender = (
-      <FormThree formData={formData} setFormData={setFormData} />
+      <FormThree
+        formData={formData}
+        onChange={formOnChange}
+        formValidationError={formValidationError}
+      />
     );
   }
 
@@ -147,7 +203,7 @@ export default function Home() {
             type="button"
             btnText={"Save"}
             classes={"bg-blue-900"}
-            disabled={formStep === 2}
+            // disabled={formStep === 2}
             onClick={saveFormData}
           />
           <CustomButton
