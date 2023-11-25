@@ -9,6 +9,9 @@ export default function Home() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    firstName: "",
+    lastName: "",
+    address: "",
   });
   const [formValidationError, setFormValidationError] = useState({});
 
@@ -55,12 +58,56 @@ export default function Home() {
         localStorage.setItem("formData", JSON.stringify(formData));
         setFormStep((prev) => (prev += 1));
       }
-    } else if (formData === 1) {
+    } else if (formStep === 1) {
+      const { firstName, lastName, address } = formData;
+
+      // validate first name
+      const validFirstName = /^[a-zA-Z]{2,50}$/.test(firstName);
+
+      if (!validFirstName) {
+        setFormValidationError((prev) => ({
+          ...prev,
+          firstName:
+            "Please enter valid first name. nly alphabets. Minimum of 2 character and maximum 50.",
+        }));
+      } else {
+        setFormValidationError((prev) => ({ ...prev, firstName: "" }));
+      }
+
+      // validate last name if present
+      const validLastName = /^[a-zA-Z]*$/.test(lastName);
+
+      if (!validLastName) {
+        setFormValidationError((prev) => ({
+          ...prev,
+          lastName: "Only alphabets are allowed",
+        }));
+      } else {
+        setFormValidationError((prev) => ({ ...prev, lastName: "" }));
+      }
+
+      // validate address
+      const validAddress = /^.{10,}$/.test(address);
+
+      if (!validAddress) {
+        setFormValidationError((prev) => ({
+          ...prev,
+          address: "Please enter a valid address. Minimum length 10.",
+        }));
+      } else {
+        setFormValidationError((prev) => ({ ...prev, address: "" }));
+      }
+
+      // updating local storage
+      if (validFirstName && validLastName && validAddress) {
+        localStorage.setItem("formData", JSON.stringify(formData));
+        setFormStep((prev) => (prev += 1));
+      }
     } else {
     }
   };
 
-  console.log("formData", formValidationError);
+  console.log("formData", formData);
 
   if (formStep === 0) {
     componentToRender = (
@@ -72,7 +119,11 @@ export default function Home() {
     );
   } else if (formStep === 1) {
     componentToRender = (
-      <FormTwo formData={formData} setFormData={setFormData} />
+      <FormTwo
+        formData={formData}
+        onChange={formOneOnChange}
+        formValidationError={formValidationError}
+      />
     );
   } else {
     componentToRender = (
@@ -105,7 +156,7 @@ export default function Home() {
             classes={""}
             disabled={formStep === 2}
             onClick={() => {
-              if (formStep === 0) {
+              if (formStep === 0 || formStep === 1) {
                 saveFormData();
               } else {
                 setFormStep((prev) => (prev += 1));
