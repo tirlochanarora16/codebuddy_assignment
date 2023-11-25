@@ -5,7 +5,7 @@ const CustomButton = ({ type, btnText, onClick, classes, disabled }) => {
     <button
       type={type}
       onClick={onClick}
-      className={`bg-blue-400 p-3 rounded-md ${classes} disabled:bg-gray-500`}
+      className={`bg-blue-400 p-3 rounded-md ${classes} disabled:bg-gray-500 disabled:cursor-not-allowed`}
       disabled={disabled}
     >
       {btnText}
