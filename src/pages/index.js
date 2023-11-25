@@ -17,7 +17,7 @@ export default function Home() {
 
   let componentToRender = null;
 
-  const formOneOnChange = (e) => {
+  const formOnChange = (e) => {
     const { id, value } = e.target;
 
     setFormData((prev) => ({ ...prev, [id]: value }));
@@ -113,7 +113,7 @@ export default function Home() {
     componentToRender = (
       <FormOne
         formData={formData}
-        onChange={formOneOnChange}
+        onChange={formOnChange}
         formValidationError={formValidationError}
       />
     );
@@ -121,7 +121,7 @@ export default function Home() {
     componentToRender = (
       <FormTwo
         formData={formData}
-        onChange={formOneOnChange}
+        onChange={formOnChange}
         formValidationError={formValidationError}
       />
     );
