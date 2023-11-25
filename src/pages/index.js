@@ -5,15 +5,34 @@ import FormThree from "@/components/FormThree";
 
 export default function Home() {
   const [formStep, setFormStep] = useState(0);
+  const [formData, setFormData] = useState({});
 
   let componentToRender = null;
 
+  const formOneOnChange = (e) => {
+    const { id, value } = e.target;
+
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  console.log("formData", formData);
+
   if (formStep === 0) {
-    componentToRender = <FormOne />;
+    componentToRender = (
+      <FormOne
+        formData={formData}
+        setFormData={setFormData}
+        onChange={formOneOnChange}
+      />
+    );
   } else if (formStep === 1) {
-    componentToRender = <FormTwo />;
+    componentToRender = (
+      <FormTwo formData={formData} setFormData={setFormData} />
+    );
   } else {
-    componentToRender = <FormThree />;
+    componentToRender = (
+      <FormThree formData={formData} setFormData={setFormData} />
+    );
   }
 
   return (
